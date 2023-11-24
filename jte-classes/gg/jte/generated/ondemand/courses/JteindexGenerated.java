@@ -2,32 +2,31 @@ package gg.jte.generated.ondemand.courses;
 import org.example.hexlet.dto.courses.CoursesPage;
 public final class JteindexGenerated {
 	public static final String JTE_NAME = "courses/index.jte";
-	public static final int[] JTE_LINE_INFO = {0,0,1,1,1,11,11,11,11,12,12,14,14,15,15,17,17,17,17,17,17,17,18,18,18,20,20,21,21,23,23,23,1,1,1,1};
+	public static final int[] JTE_LINE_INFO = {0,0,1,1,1,3,3,5,5,8,8,11,11,11,14,14,14,14,14,14,14,14,14,14,17,17,19,19,19,19,19,1,1,1,1};
 	public static void render(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, CoursesPage page) {
-		jteOutput.writeContent("\n<!doctype html>\n<html>\n<head>\n    <meta charset=\"utf-8\" />\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />\n    <title>Хекслет</title>\n</head>\n<body>\n<h1>");
-		jteOutput.setContext("h1", null);
-		jteOutput.writeUserContent(page.getHeader());
-		jteOutput.writeContent("</h1>\n");
-		if (page.getCourses().isEmpty()) {
-			jteOutput.writeContent("\n    <p>Пока не добавлено ни одного курса</p>\n");
-		} else {
-			jteOutput.writeContent("\n    ");
-			for (var course : page.getCourses()) {
-				jteOutput.writeContent("\n        <div>\n            <h2><a href=\"/courses/");
-				jteOutput.setContext("a", "href");
-				jteOutput.writeUserContent(course.getId());
-				jteOutput.setContext("a", null);
-				jteOutput.writeContent("\">");
-				jteOutput.setContext("a", null);
-				jteOutput.writeUserContent(course.getName());
-				jteOutput.writeContent("</a></h2>\n            <p>");
-				jteOutput.setContext("p", null);
-				jteOutput.writeUserContent(course.getDescription());
-				jteOutput.writeContent("</p>\n        </div>\n    ");
+		jteOutput.writeContent("\n");
+		gg.jte.generated.ondemand.layout.JtepageGenerated.render(jteOutput, jteHtmlInterceptor, new gg.jte.html.HtmlContent() {
+			public void writeTo(gg.jte.html.HtmlTemplateOutput jteOutput) {
+				jteOutput.writeContent("\n    <h1>Courses</h1>\n    <table class=\"table table-striped\">\n        ");
+				for (var course : page.getCourses()) {
+					jteOutput.writeContent("\n            <tr>\n                <td>\n                    ");
+					jteOutput.setContext("td", null);
+					jteOutput.writeUserContent(course.getId());
+					jteOutput.writeContent("\n                </td>\n                <td>\n                    <a href=\"/courses/");
+					jteOutput.setContext("a", "href");
+					jteOutput.writeUserContent(course.getId());
+					jteOutput.setContext("a", null);
+					jteOutput.writeContent("\">");
+					jteOutput.setContext("a", null);
+					jteOutput.writeUserContent(course.getName());
+					jteOutput.writeContent(" ");
+					jteOutput.setContext("a", null);
+					jteOutput.writeUserContent(course.getDescription());
+					jteOutput.writeContent("</a>\n                </td>\n            </tr>\n        ");
+				}
+				jteOutput.writeContent("\n    </table>\n");
 			}
-			jteOutput.writeContent("\n");
-		}
-		jteOutput.writeContent("\n</body>\n</html>");
+		});
 	}
 	public static void renderMap(gg.jte.html.HtmlTemplateOutput jteOutput, gg.jte.html.HtmlInterceptor jteHtmlInterceptor, java.util.Map<String, Object> params) {
 		CoursesPage page = (CoursesPage)params.get("page");

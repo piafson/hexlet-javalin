@@ -18,13 +18,15 @@ repositories {
 }
 
 dependencies {
-    // Версии зависимостей могут отличаться
-    // Здесь мы сразу подключаем зависимости,
-    // которые понадобятся во время обучения
     implementation("io.javalin:javalin:5.6.3")
     implementation("org.slf4j:slf4j-simple:2.0.9")
+    implementation("gg.jte:jte:3.0.1")
+    implementation("io.javalin:javalin-bundle:5.6.2")
     implementation("io.javalin:javalin-rendering:5.6.2")
     implementation("gg.jte:jte:3.1.5")
+    implementation("gg.jte:jte:3.0.1")
+    implementation("gg.jte:jte:3.0.1")
+    implementation("gg.jte:jte:3.0.1")
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     testCompileOnly("org.projectlombok:lombok:1.18.30")
