@@ -5,6 +5,7 @@ import io.javalin.http.NotFoundResponse;
 import org.example.hexlet.dto.courses.CoursePage;
 import org.example.hexlet.dto.courses.CoursesPage;
 import org.example.hexlet.model.Course;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,7 +33,17 @@ public class HelloWorld {
         app.get("/", ctx -> ctx.render("index.jte"));
 
         app.get("/courses", ctx -> {
-            var page = new CoursesPage(COURSES);
+            var term = ctx.queryParam("term");
+            List <Course> courses;
+            if (term == null) {
+                courses = COURSES;
+            } else {
+                courses = COURSES
+                        .stream()
+                        .filter(u -> StringUtils.startsWithIgnoreCase(u.getName(), term))
+                        .toList();
+            }
+            var page = new CoursesPage(courses, term);
             ctx.render("courses/index.jte", Collections.singletonMap("page", page));
         });
 

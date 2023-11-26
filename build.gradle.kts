@@ -23,6 +23,7 @@ dependencies {
     implementation("io.javalin:javalin-bundle:5.6.3")
     implementation("io.javalin:javalin-rendering:5.6.2")
     implementation("gg.jte:jte:3.1.5")
+    implementation("org.apache.commons:commons-lang3:3.13.0")
 
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
