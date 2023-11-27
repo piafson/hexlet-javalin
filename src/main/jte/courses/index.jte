@@ -4,9 +4,12 @@
 @template.layout.page(
 content = @`
     <form action="/courses" method="get">
-        <input type="search" name="term" value="${page.getTerm()}"/>
-        <input type="submit" value="Search"/>
+        <!--<input type="search" name="term" value="${page.getTerm()}"/>
+        <input type="submit" value="Search"/>-->
     </form>
+    <div class="mb-3">
+        <a href="/courses/build">Build a new course</a>
+    </div>
     <h1>Courses</h1>
     <table class="table table-striped">
         @for(var course : page.getCourses())
@@ -15,7 +18,10 @@ content = @`
                     ${course.getId()}
                 </td>
                 <td>
-                    <a href="/courses/${course.getId()}">${course.getName()} ${course.getDescription()}</a>
+                    <a href="/courses/${course.getId()}">${course.getName()}</a>
+                </td>
+                <td>
+                    <a href="/courses/${course.getId()}">${course.getDescription()}</a>
                 </td>
             </tr>
         @endfor
