@@ -2,8 +2,11 @@ package org.example.hexlet;
 
 import io.javalin.Javalin;
 import io.javalin.http.NotFoundResponse;
+import io.javalin.validation.ValidationException;
+import org.example.hexlet.dto.courses.BuildCoursePage;
 import org.example.hexlet.dto.courses.CoursePage;
 import org.example.hexlet.dto.courses.CoursesPage;
+import org.example.hexlet.dto.users.BuildUserPage;
 import org.example.hexlet.dto.users.UsersPage;
 import org.example.hexlet.model.Course;
 import org.apache.commons.lang3.StringUtils;
@@ -15,12 +18,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class HelloWorld {
-
-    /*private static final List<Course> COURSES = List.of(
-            new Course(1,"java", "java course"),
-            new Course(2,"python", "python course"),
-            new Course(3, "php", "php course")
-    ); */
     public static void main(String[] args) {
         var app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
@@ -36,34 +33,6 @@ public class HelloWorld {
 
         app.get("/", ctx -> ctx.render("index.jte"));
 
-        /*app.get("/courses", ctx -> {
-            var term = ctx.queryParam("term");
-            List <Course> courses;
-            if (term == null) {
-                courses = COURSES;
-            } else {
-                courses = COURSES
-                        .stream()
-                        .filter(u -> StringUtils.startsWithIgnoreCase(u.getName(), term))
-                        .toList();
-            }
-            var page = new CoursesPage(courses, term);
-            ctx.render("courses/index.jte", Collections.singletonMap("page", page));
-        });
-
-        app.get("/courses/{id}", ctx -> {
-            var id = ctx.pathParamAsClass("id", Long.class).get();
-            Course course = COURSES.stream()
-                    .filter(u -> id.equals(u.getId()))
-                    .findFirst()
-                    .orElse(null);
-            if (course == null) {
-                throw new NotFoundResponse("Course not found");
-            }
-            var page = new CoursePage(course);
-            ctx.render("courses/show.jte", Collections.singletonMap("page", page));
-        });*/
-
         app.get("/courses", ctx -> {
             List<Course> courses = CourseRepository.getEntities();
             var page = new CoursesPage(courses);
@@ -71,16 +40,27 @@ public class HelloWorld {
         });
 
         app.get("/courses/build", ctx -> {
-            ctx.render("courses/build.jte");
+            var page = new BuildCoursePage();
+            ctx.render("courses/build.jte", Collections.singletonMap("page", page));
         });
 
         app.post("/courses", ctx -> {
-            var name = ctx.formParam("name");
-            var description = ctx.formParam("description");
-
-            var course = new Course(name, description);
-            CourseRepository.save(course);
-            ctx.redirect("/courses");
+            try {
+                var name = ctx.formParamAsClass("name", String.class)
+                        .check(value -> value.length() >= 2, "Название не должно быть короче двух символов")
+                        .get();
+                var description = ctx.formParamAsClass("description", String.class)
+                        .check(value -> value.length() >= 10, "Описание должно быть не короче 10 символов")
+                        .get();
+                var course = new Course(name, description);
+                CourseRepository.save(course);
+                ctx.redirect("/courses");
+            } catch (ValidationException e) {
+                var name = ctx.formParam("name");
+                var description = ctx.formParam("description");
+                var page = new BuildCoursePage(name, description, e.getErrors());
+                ctx.render("courses/build.jte", Collections.singletonMap("page", page));
+            }
         });
 
         app.get("/courses/{id}", ctx -> {
@@ -104,19 +84,26 @@ public class HelloWorld {
         });
 
         app.get("/users/build", ctx -> {
-            ctx.render("users/build.jte");
+            var page = new BuildUserPage();
+            ctx.render("users/build.jte", Collections.singletonMap("page", page));
         });
 
         app.post("/users", ctx -> {
             var firstName = StringUtils.capitalize(StringUtils.strip(ctx.formParam("firstName")));
             var lastName = StringUtils.capitalize(StringUtils.strip(ctx.formParam("lastName")));
             var email = StringUtils.strip(ctx.formParam("email")).toLowerCase();
-            var password = ctx.formParam("password");
-            var passwordConfirmation = ctx.formParam("passwordConfirmation");
-
-            var user = new User(firstName, lastName, email, password);
-            UserRepository.save(user);
-            ctx.redirect("/users");
+            try {
+                 var passwordConfirmation = ctx.formParam("passwordConfirmation");
+                 var password = ctx.formParamAsClass("password", String.class)
+                         .check(value -> value.equals(passwordConfirmation), "Пароли не совпадают")
+                         .get();
+                 var user = new User(firstName, lastName, email, password);
+                 UserRepository.save(user);
+                 ctx.redirect("/users");
+            } catch (ValidationException e) {
+                var page = new BuildUserPage(firstName, lastName, email, e.getErrors());
+                ctx.render("users/build.jte", Collections.singletonMap("page", page)).status(422);
+            }
         });
         app.start(7070);
     }
