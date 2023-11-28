@@ -1,3 +1,4 @@
+@import org.example.hexlet.NamedRoutes
 @import org.example.hexlet.dto.users.UsersPage
 @param UsersPage page
 
@@ -6,7 +7,7 @@ content = @`
     <h1>Users</h1>
 
     <div class="mb-3">
-        <a href="/users/build">Register a new user</a>
+        <a href="${NamedRoutes.buildUserPath()}">Register a new user</a>
     </div>
 
     <table class="table table-striped">

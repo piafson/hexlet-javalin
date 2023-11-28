@@ -1,30 +1,23 @@
+@import org.example.hexlet.NamedRoutes
 @import org.example.hexlet.dto.courses.CoursesPage
 @param CoursesPage page
 
 @template.layout.page(
 content = @`
-    <form action="/courses" method="get">
-        <!--<input type="search" name="term" value="${page.getTerm()}"/>
-        <input type="submit" value="Search"/>-->
-    </form>
+
     <div class="mb-3">
-        <a href="/courses/build">Build a new course</a>
+        <a href="${NamedRoutes.buildCoursePath()}">Build a new course</a>
     </div>
-    <h1>Courses</h1>
-    <table class="table table-striped">
+    <h1>Список Курсов</h1>
+    @if(page.getCourses().isEmpty())
+        <p>Пока не добавлено ни одного курса</p>
+    @else
         @for(var course : page.getCourses())
-            <tr>
-                <td>
-                    ${course.getId()}
-                </td>
-                <td>
-                    <a href="/courses/${course.getId()}">${course.getName()}</a>
-                </td>
-                <td>
-                    <a href="/courses/${course.getId()}">${course.getDescription()}</a>
-                </td>
-            </tr>
+            <h2><a href="${NamedRoutes.coursePath(course.getId())}">${course.getName()}</a></h2>
+
+            <p>${course.getDescription()}</p>
+
         @endfor
-    </table>
+    @endif
 `
 )

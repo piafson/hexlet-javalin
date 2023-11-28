@@ -33,18 +33,18 @@ public class HelloWorld {
 
         app.get("/", ctx -> ctx.render("index.jte"));
 
-        app.get("/courses", ctx -> {
+        app.get(NamedRoutes.coursesPath(), ctx -> {
             List<Course> courses = CourseRepository.getEntities();
             var page = new CoursesPage(courses);
             ctx.render("courses/index.jte", Collections.singletonMap("page", page));
         });
 
-        app.get("/courses/build", ctx -> {
+        app.get(NamedRoutes.buildCoursePath(), ctx -> {
             var page = new BuildCoursePage();
             ctx.render("courses/build.jte", Collections.singletonMap("page", page));
         });
 
-        app.post("/courses", ctx -> {
+        app.post(NamedRoutes.coursesPath(), ctx -> {
             try {
                 var name = ctx.formParamAsClass("name", String.class)
                         .check(value -> value.length() >= 2, "Название не должно быть короче двух символов")
@@ -54,7 +54,7 @@ public class HelloWorld {
                         .get();
                 var course = new Course(name, description);
                 CourseRepository.save(course);
-                ctx.redirect("/courses");
+                ctx.redirect(NamedRoutes.coursesPath());
             } catch (ValidationException e) {
                 var name = ctx.formParam("name");
                 var description = ctx.formParam("description");
@@ -63,7 +63,7 @@ public class HelloWorld {
             }
         });
 
-        app.get("/courses/{id}", ctx -> {
+        app.get( NamedRoutes.coursePath("{id}"), ctx -> {
             var id = ctx.pathParamAsClass("id", Long.class).get();
             List<Course> courses = CourseRepository.getEntities();
             Course course = courses.stream()
@@ -77,18 +77,18 @@ public class HelloWorld {
             ctx.render("courses/show.jte", Collections.singletonMap("page", page));
         });
 
-        app.get("/users", ctx -> {
+        app.get(NamedRoutes.usersPath(), ctx -> {
             List<User> users = UserRepository.getEntities();
             var page = new UsersPage(users);
             ctx.render("users/index.jte", Collections.singletonMap("page", page));
         });
 
-        app.get("/users/build", ctx -> {
+        app.get(NamedRoutes.buildUserPath(), ctx -> {
             var page = new BuildUserPage();
             ctx.render("users/build.jte", Collections.singletonMap("page", page));
         });
 
-        app.post("/users", ctx -> {
+        app.post(NamedRoutes.usersPath(), ctx -> {
             var firstName = StringUtils.capitalize(StringUtils.strip(ctx.formParam("firstName")));
             var lastName = StringUtils.capitalize(StringUtils.strip(ctx.formParam("lastName")));
             var email = StringUtils.strip(ctx.formParam("email")).toLowerCase();
@@ -99,7 +99,7 @@ public class HelloWorld {
                          .get();
                  var user = new User(firstName, lastName, email, password);
                  UserRepository.save(user);
-                 ctx.redirect("/users");
+                 ctx.redirect(NamedRoutes.usersPath());
             } catch (ValidationException e) {
                 var page = new BuildUserPage(firstName, lastName, email, e.getErrors());
                 ctx.render("users/build.jte", Collections.singletonMap("page", page)).status(422);
