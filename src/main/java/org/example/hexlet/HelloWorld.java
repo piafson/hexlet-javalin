@@ -1,14 +1,39 @@
 package org.example.hexlet;
 
-import io.javalin.Javalin;
 import org.example.hexlet.controllers.CoursesController;
 import org.example.hexlet.controllers.RootController;
 import org.example.hexlet.controllers.SessionsController;
 import org.example.hexlet.controllers.UsersController;
+import org.example.hexlet.repository.BaseRepository;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.stream.Collectors;
+
+import io.javalin.Javalin;
+//import lombok.extern.slf4j.Slf4j;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 
 public class HelloWorld {
-    public static Javalin getApp()  {
+    public static Javalin getApp() throws IOException, SQLException {
+        var hikariConfig = new HikariConfig();
+        hikariConfig.setJdbcUrl("jdbc:h2:mem:hexlet_project;DB_CLOSE_DELAY=-1;");
+
+        var dataSource = new HikariDataSource(hikariConfig);
+        var url = HelloWorld.class.getClassLoader().getResource("schema.sql");
+        var file = new File(url.getFile());
+        var sql = Files.lines(file.toPath())
+                .collect(Collectors.joining("\n"));
+
+        try (var connection = dataSource.getConnection();
+                 var statement = connection.createStatement();) {
+            statement.execute(sql);
+        }
+        BaseRepository.dataSource = dataSource;
+
         var app = Javalin.create(config -> {
             config.plugins.enableDevLogging();
         });
@@ -29,7 +54,7 @@ public class HelloWorld {
 
         return app;
     }
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, SQLException {
         Javalin app = getApp();
         app.start(7070);
     }

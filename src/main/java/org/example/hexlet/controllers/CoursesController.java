@@ -11,18 +11,18 @@ import org.example.hexlet.model.Course;
 import org.example.hexlet.repository.CourseRepository;
 
 import java.util.Collections;
-import java.util.List;
+import java.sql.SQLException;
 
 public class CoursesController {
-    public static void index(Context ctx) {
-        List<Course> courses = CourseRepository.getEntities();
+    public static void index(Context ctx) throws SQLException {
+        var courses = CourseRepository.getEntities();
         var page = new CoursesPage(courses);
         ctx.render("courses/index.jte", Collections.singletonMap("page", page));
     }
 
-    public static void show(Context ctx) {
+    public static void show(Context ctx) throws SQLException {
         var id = ctx.pathParamAsClass("id", Long.class).get();
-        List<Course> courses = CourseRepository.getEntities();
+        var courses = CourseRepository.getEntities();
         Course course = courses.stream()
                 .filter(u -> id.equals(u.getId()))
                 .findFirst()
@@ -39,7 +39,7 @@ public class CoursesController {
         ctx.render("courses/build.jte", Collections.singletonMap("page", page));
     }
 
-    public static void create(Context ctx) {
+    public static void create(Context ctx) throws SQLException {
         try {
             var name = ctx.formParamAsClass("name", String.class)
                     .check(value -> value.length() >= 2, "Название не должно быть короче двух символов")

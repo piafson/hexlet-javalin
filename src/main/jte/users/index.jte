@@ -11,6 +11,12 @@ content = @`
     </div>
 
     <table class="table table-striped">
+        @if (page.getFlash() != null)
+            <div class="alert alert-success" role="alert">
+                <p>${page.getFlash()}</p>
+            </div>
+        @endif
+
         @for(var user : page.getUsers())
             <tr>
                 <td>

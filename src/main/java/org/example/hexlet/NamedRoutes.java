@@ -6,7 +6,7 @@ public class NamedRoutes {
         return "/";
     }
     public static String usersPath() {
-        return "/u";
+        return "/users";
     }
 
     public static String buildUserPath() {

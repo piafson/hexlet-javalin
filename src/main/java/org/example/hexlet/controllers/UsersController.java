@@ -9,13 +9,16 @@ import org.example.hexlet.dto.users.UsersPage;
 import org.example.hexlet.model.User;
 import org.example.hexlet.repository.UserRepository;
 
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
 
 public class UsersController {
-    public static void index(Context ctx) {
+    public static void index(Context ctx) throws SQLException {
         List<User> users = UserRepository.getEntities();
+        String flash = ctx.consumeSessionAttribute("flash");
         var page = new UsersPage(users);
+        page.setFlash(flash);
         ctx.render("users/index.jte", Collections.singletonMap("page", page));
     }
     public static void build(Context ctx) {
@@ -23,7 +26,7 @@ public class UsersController {
         ctx.render("users/build.jte", Collections.singletonMap("page", page));
     }
 
-    public static void create(Context ctx) {
+    public static void create(Context ctx) throws SQLException {
         var firstName = StringUtils.capitalize(StringUtils.strip(ctx.formParam("firstName")));
         var lastName = StringUtils.capitalize(StringUtils.strip(ctx.formParam("lastName")));
         var email = StringUtils.strip(ctx.formParam("email")).toLowerCase();
@@ -34,6 +37,7 @@ public class UsersController {
                     .get();
             var user = new User(firstName, lastName, email, password);
             UserRepository.save(user);
+            ctx.sessionAttribute("flash", "Регистрация прошла успешно!");
             ctx.redirect(NamedRoutes.usersPath());
         } catch (ValidationException e) {
             var page = new BuildUserPage(firstName, lastName, email, e.getErrors());

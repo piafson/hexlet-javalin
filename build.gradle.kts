@@ -24,6 +24,8 @@ dependencies {
     implementation("io.javalin:javalin-rendering:5.6.2")
     implementation("gg.jte:jte:3.1.5")
     implementation("org.apache.commons:commons-lang3:3.13.0")
+    implementation("com.h2database:h2:2.2.224")
+    implementation("com.zaxxer:HikariCP:5.1.0")
 
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
