@@ -28,6 +28,7 @@ dependencies {
     implementation("com.h2database:h2:2.2.224")
     implementation("com.zaxxer:HikariCP:5.1.0")
 
+
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
     testCompileOnly("org.projectlombok:lombok:1.18.30")
@@ -48,15 +49,3 @@ tasks.test {
     }
 }
 
-buildscript {
-    repositories {
-        maven {
-            url = uri("https://plugins.gradle.org/m2/")
-        }
-    }
-    dependencies {
-        classpath("com.github.johnrengelman:shadow:8.1.1")
-    }
-}
-
-apply(plugin = "com.github.johnrengelman.shadow")
