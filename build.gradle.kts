@@ -2,9 +2,9 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
 
 plugins {
+    id("com.github.johnrengelman.shadow") version "8.1.1"
     id("java")
     application
-    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 application {
