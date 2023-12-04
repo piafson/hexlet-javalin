@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+@Slf4j
 public class HelloWorld {
     public static Javalin getApp() throws IOException, SQLException {
         var hikariConfig = new HikariConfig();
@@ -28,6 +29,7 @@ public class HelloWorld {
         var sql = Files.lines(file.toPath())
                 .collect(Collectors.joining("\n"));
 
+        log.info(sql);
         try (var connection = dataSource.getConnection();
                  var statement = connection.createStatement();) {
             statement.execute(sql);
