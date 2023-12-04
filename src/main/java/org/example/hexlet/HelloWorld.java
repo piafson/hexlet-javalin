@@ -6,9 +6,8 @@ import org.example.hexlet.controllers.SessionsController;
 import org.example.hexlet.controllers.UsersController;
 import org.example.hexlet.repository.BaseRepository;
 
-import java.io.File;
+import java.io.*;
 import java.nio.file.Files;
-import java.io.IOException;
 import java.sql.SQLException;
 import java.util.stream.Collectors;
 
@@ -27,7 +26,7 @@ public class HelloWorld {
         var url = HelloWorld.class.getClassLoader().getResource("schema.sql");
         var file = new File(url.getFile());
         var sql = Files.lines(file.toPath())
-                .collect(Collectors.joining("\n"));
+                .collect(Collectors.joining(System.lineSeparator()));
 
         log.info(sql);
         try (var connection = dataSource.getConnection();
