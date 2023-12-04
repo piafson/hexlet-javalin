@@ -20,4 +20,4 @@ COPY / .
 
 RUN gradle installDist
 
-CMD ./build/
+CMD ./build/libs
