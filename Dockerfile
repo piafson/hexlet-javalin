@@ -20,4 +20,4 @@ COPY / .
 
 RUN gradle installDist
 
-CMD ./build/libs
+CMD ["./gradlew", "run"]
