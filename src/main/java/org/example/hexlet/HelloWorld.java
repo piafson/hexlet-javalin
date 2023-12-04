@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.stream.Collectors;
 
 import io.javalin.Javalin;
-//import lombok.extern.slf4j.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
