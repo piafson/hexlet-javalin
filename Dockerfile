@@ -20,4 +20,4 @@ COPY / .
 
 RUN gradle installDist
 
-CMD ["./gradlew", "run"]
+CMD ["gradle", "run"]
