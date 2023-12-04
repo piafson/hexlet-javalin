@@ -25,7 +25,7 @@ public class HelloWorld {
         var dataSource = new HikariDataSource(hikariConfig);
         var url = HelloWorld.class.getClassLoader().getResource("schema.sql");
         var file = new File(url.getFile());
-        var sql = Files.lines(file.toPath())
+        var sql = Files.lines(file.toPath().toAbsolutePath())
                 .collect(Collectors.joining("\n"));
 
         try (var connection = dataSource.getConnection();
